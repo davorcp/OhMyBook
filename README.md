@@ -30,3 +30,5 @@ Paso 5 - sincronizar cambios que puede haber en el remoto
 	git status
 	
 	git pull
+
+Linea que entra en conflicto
