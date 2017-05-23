@@ -1,6 +1,5 @@
 <Query Kind="Program" />
 
-
 /*
   Clase simple para representar un Usuario conectado al sistema
 */
@@ -18,7 +17,7 @@ public class Usuario
 
 public class ServiciosSeguridad
 {
-  private string _error;
+  private string _status;
   /*
     El metodo Login retorna, o bien un usuario VALIDO o bien null, indicando que existe algun problema
     con la autenticacion
@@ -31,18 +30,20 @@ public class ServiciosSeguridad
 
     if ((user == "jperez" && pwd == "1234") || (user == "bgates" && pwd == "5678"))
     {
-      result = new Usuario(user) { Password = pwd };
+      result = new Usuario(user) { Password = pwd, Email = string.Format("{0}@gmail.com", user) };
     }
     else 
     {
-      _error = "Usuario o contraseña incorrectos...";
+      //  es bueno colocar mensajes ambiguos y que el que ingresa no sepa si se coloco mal el 
+      //  login o la password
+      _status = "Credenciales invalidas...";
     }
     return result;
   }
 
   public string Status() 
   {
-    return _error;
+    return _status;
   }
 }
 
@@ -67,4 +68,3 @@ void Main()
   else
     Console.WriteLine("Usuario conectado: {0} ; email: {1}", usr.Login, usr.Email);
 }
-

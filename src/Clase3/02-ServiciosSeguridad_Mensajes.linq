@@ -17,7 +17,6 @@ public class Usuario
 
 /*
   Agregamos la posibilidad de enviar mail cuando tengo que recordar contraseña
-  
 */
 public class ServiciosSeguridad
 {
@@ -32,18 +31,24 @@ public class ServiciosSeguridad
   {
     Usuario result = null;
 
-    _status = null;
     if ((user == "jperez" && pwd == "1234") || (user == "bgates" && pwd == "5678"))
     {
-      result = new Usuario(user) { Password = pwd };
+      result = new Usuario(user) { Password = pwd, Email = string.Format("{0}@gmail.com", user) };
     }
-    else 
+    else
     {
-      _status = "Credenciales incorrectas...";
+      //  es bueno colocar mensajes ambiguos y que el que ingresa no sepa si se coloco mal el 
+      //  login o la password
+      _status = "Credenciales invalidas...";
     }
     return result;
   }
 
+  public string Status()
+  {
+    return _status;
+  }
+ 
   /*
     Si la combinacion de login y email coinciden entonces reseteamos la contraseña del usuario y
     se la enviamos en un mail
@@ -55,19 +60,15 @@ public class ServiciosSeguridad
     {
       Console.WriteLine(">>>> Crear nueva contraseña para {0}", user);
       Console.WriteLine(">>>> Enviar nueva contraseña {0} a {1}", "qwerty2017", email);
-      
+
       Mailer mail = new Mailer();
       mail.AgregarDestinatario(email);
       mail.EnviarMensaje("Su nueva contraseña es qwerty2017");
     }
-    _status = "Se envio un mail con la informacion solicitada"; 
-  }
-
-  public string Status() 
-  {
-    return _status;
+    _status = "Se envio un mail con la informacion solicitada";
   }
 }
+
 
 public class Mailer
 {
@@ -88,11 +89,16 @@ public class Mailer
 void Main()
 {
   ServiciosSeguridad seg = new ServiciosSeguridad();
-  
+ 
+  //  Primer caso: usuario y mail existentes
+  //
   seg.RecuperarPassword("jperez", "jperez@gmail.com");
   Console.WriteLine(seg.Status());
 
   Console.WriteLine("================================================================");
+  
+  //  Segundo caso: usuario o mail invalidos
+  //
   seg.RecuperarPassword("jperez", "jperez@yahoo.com");
   Console.WriteLine(seg.Status());
 }

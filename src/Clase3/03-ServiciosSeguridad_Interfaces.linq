@@ -16,6 +16,8 @@ public class Usuario
 }
 
 /*
+  Agregamos la posibilidad de enviar mail cuando tengo que recordar contraseña
+
   Eliminamos la dependencia de una clase concreta y la llevamos a una abstraccion (dependency inversion)
   Inyectamos la dependencia en el constructor
 */
@@ -23,12 +25,14 @@ public class ServiciosSeguridad
 {
   private string _status;
   private IMessenger _mensajero;
-  
+
+  //  inyectamos la dependencia mediante el ctor
+  //
   public ServiciosSeguridad(IMessenger msgr)
   {
     _mensajero = msgr;
   }
-  
+
   /*
     El metodo Login retorna, o bien un usuario VALIDO o bien null, indicando que existe algun problema
     con la autenticacion
@@ -39,16 +43,22 @@ public class ServiciosSeguridad
   {
     Usuario result = null;
 
-    _status = null;
     if ((user == "jperez" && pwd == "1234") || (user == "bgates" && pwd == "5678"))
     {
-      result = new Usuario(user) { Password = pwd };
+      result = new Usuario(user) { Password = pwd, Email = string.Format("{0}@gmail.com", user) };
     }
-    else 
+    else
     {
-      _status = "Credenciales incorrectas...";
+      //  es bueno colocar mensajes ambiguos y que el que ingresa no sepa si se coloco mal el 
+      //  login o la password
+      _status = "Credenciales invalidas...";
     }
     return result;
+  }
+
+  public string Status()
+  {
+    return _status;
   }
 
   /*
@@ -60,23 +70,25 @@ public class ServiciosSeguridad
     _status = null;
     if (user == "jperez" && email == "jperez@gmail.com")
     {
-      Usuario usr = new Usuario(user) { Email = email };
+      //  llamar a una funcion que obtiene una nueva pass aleatoria
+      string newPass = "qwerty2017";
+      Console.WriteLine(">>>> Creada nueva contraseña {0} para {1}", newPass, user);
       
-      Console.WriteLine(">>>> Crear nueva contraseña para {0}", user);
-      Console.WriteLine(">>>> Enviar nueva contraseña {0} a {1}", "qwerty2017", email);
-      
-      //Mailer mail = new Mailer();
-      //mail.AgregarDestinatario(email);
-      //mail.EnviarMensaje("Su nueva contraseña es qwerty2017");
-      
-      _mensajero.EnviarMensaje("Su nueva contraseña es qwerty2017", usr);
-    }
-    _status = "Se envio un mail con la informacion solicitada"; 
-  }
+      //  setear contraseña en usuario
+      Console.WriteLine(">>>> Actualizada DB de usuarios con nueva contraseña {0} a {1}", newPass, user);
 
-  public string Status() 
-  {
-    return _status;
+      Usuario usr = new Usuario(user) { Email = email, Password = newPass };
+
+      //  Observar que quito toda dependencia de la clase concreta Mailer
+      //  Dejo solo el "comportamiento" que debera tener cualquier clase que implemente IMessenger
+      //
+      //  Mailer mail = new Mailer();
+      //  mail.AgregarDestinatario(email);
+      //  mail.EnviarMensaje("Su nueva contraseña es qwerty2017");
+
+      _mensajero.EnviarMensaje(string.Format("Su nueva contraseña es {0}", newPass), usr);
+    }
+    _status = "Se envio un mail con la informacion solicitada";
   }
 }
 
@@ -109,6 +121,10 @@ public class Mailer : IMessenger
   }
 }
 
+/*
+  Usado para casos de prueba o para implementar un default que no haga nada
+  Es para no pasa null como argumento
+*/
 public class NullMessenger : IMessenger
 {
   public bool EnviarMensaje(string mensaje, Usuario destino)
@@ -118,10 +134,28 @@ public class NullMessenger : IMessenger
   }
 }
 
+public class WhatsappMessenger : IMessenger
+{
+  public bool EnviarMensaje(string mensaje, Usuario destino)
+  {
+    Console.WriteLine(">>>> Obtener telefono del usuario a partir del argumento");
+    
+    string telefono = "+5493413333222";
+    
+    Console.WriteLine("%%%% Enviando {2} por whatsapp a {0} Tel: {1}...", 
+      destino.Login, telefono, mensaje);
+    return true;
+  }
+}
+
 void Main()
 {
+  //  Podemos cambiar de estrategia o de proveedor de mensajeria
+  //  la clase ServiciosSeguridad ignora como se esta mandando el mensaje...
+  //
   // ServiciosSeguridad seg = new ServiciosSeguridad(new NullMessenger());
-  ServiciosSeguridad seg = new ServiciosSeguridad(new Mailer());
+  //  ServiciosSeguridad seg = new ServiciosSeguridad(new Mailer());
+  ServiciosSeguridad seg = new ServiciosSeguridad(new WhatsappMessenger());
   
   seg.RecuperarPassword("jperez", "jperez@gmail.com");
   Console.WriteLine(seg.Status());
