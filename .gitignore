@@ -51,7 +51,8 @@ ipch/
 *.aps
 *.ncb
 *.opensdf
-*.sdf
+#  Tenemos que dejarlo porque es el formato de SQL Compact
+# *.sdf
 *.cachefile
 
 # Visual Studio profiler

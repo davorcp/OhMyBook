@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<ArrayOfArrayOfArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ArrayOfArrayOfString>
+    <ArrayOfString>
+      <string>D:\PTR_2017_01\repo\omb\src\Servicios\ServiciosSeguridad.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>D:\PTR_2017_01\repo\omb\src\Tests\Program.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>D:\PTR_2017_01\repo\omb\src\Servicios\IMessenger.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>D:\PTR_2017_01\repo\omb\src\Servicios\Mailer.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>D:\PTR_2017_01\repo\omb\src\Data\DB.cs</string>
+    </ArrayOfString>
+  </ArrayOfArrayOfString>
+</ArrayOfArrayOfArrayOfString>
