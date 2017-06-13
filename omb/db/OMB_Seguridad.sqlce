@@ -1,4 +1,4 @@
-﻿/*
+/*
 
 	Tablas relacionadas con el modulo de SEGURIDAD
 
@@ -78,12 +78,12 @@ select * from TiposDeContacto
 create table Personas
 (
     ID_Persona 						uniqueidentifier		not null,
-    Apellidos 						nvarchar(200),
-    Nombres 						nvarchar(200),
+    Nombre	 						nvarchar(200),
     Domicilio						nvarchar(150),
     AmpliacionDomicilio				nvarchar(150),
     CodigoPostal					nvarchar(20),
     Documento						nvarchar(15),
+    Email							nvarchar(100),
     FechaNacimiento 				datetime,
     Sexo 							int,
     ID_Localidad					int,
@@ -95,6 +95,9 @@ create table Personas
     constraint FK_Personas_Localidades foreign key (ID_Localidad) references Localidades (ID_Localidad),
     constraint FK_Personas_TiposDeDocumento foreign key (ID_TipoDocumento) references TiposDeDocumento (ID_TipoDocumento)
 );
+
+drop table Personas
+drop table Contactos
 
 select * from Personas
 --	delete from Personas where ID_Persona <> '0c1df635-e79a-414b-bd21-b3ff3efd4965'
@@ -138,6 +141,8 @@ create table Empleados
 
 select * from Empleados
 
+drop table Usuarios
+
 create table Usuarios
 (
 	Login						nvarchar(20)	not null,
@@ -150,14 +155,19 @@ create table Usuarios
 	EnforceStrong				bit,
 	Enabled						bit				not null,
 	Blocked						bit				not null,
-	Legajo						nvarchar(20)	not null,
+	--	Legajo						nvarchar(20)	not null,
+	ID_Persona					uniqueidentifier		not null,
 	--
 	--	constraints
 	constraint PK_Usuarios primary key (Login),
-	constraint FK_Usuarios_Empleados foreign key (Legajo) references Empleados (Legajo)
+	--	constraint FK_Usuarios_Empleados foreign key (Legajo) references Empleados (Legajo)
+	constraint FK_Usuarios_Personas foreign key (ID_Persona) references Personas (ID_Persona)
 )
 
 select * from Usuarios
+
+insert into Usuarios (Login, Password, Enabled, Blocked, ID_Persona) 
+values ( 'ethedy', '123456', 1, 0, '0c1df635-e79a-414b-bd21-b3ff3efd4965' )
 
 delete from Usuarios where Login = 'ethedy1'
 
@@ -191,5 +201,7 @@ create table Usuarios_Perfiles
 );
 
 select * from Usuarios_Perfiles
+
+drop table Usuarios_Perfiles
 
 
