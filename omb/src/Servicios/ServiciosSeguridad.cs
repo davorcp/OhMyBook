@@ -1,4 +1,6 @@
-﻿using System;
+﻿#define NO_DB
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,7 +35,11 @@ namespace Servicios
     public Usuario Login(string user, string pwd)
     {
       Usuario result = null;
+#if NO_DB
       Database db = Database.DB;
+#else
+      OMBContext db = OMBContext.DB;
+#endif
 
       result = db.Usuarios.Find(usr => usr.Login == user && usr.Password == pwd);
 
@@ -67,7 +73,11 @@ namespace Servicios
     public void RecuperarPassword(string user, string email)
     {
       Usuario usuario = null;
+#if NO_DB
       Database db = Database.DB;
+#else
+      OMBContext db = OMBContext.DB;
+#endif
 
       _status = null;
 

@@ -1,4 +1,6 @@
-﻿using System;
+﻿#define NO_DB
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +10,7 @@ using Entidades;
 
 namespace Data
 {
+#if NO_DB
   public class Database
   {
     public static Database DB { get; private set; }
@@ -42,4 +45,5 @@ namespace Data
     public List<Usuario> Usuarios { get; set; }
     public List<Perfil> Perfiles { get; set; }
   }
+#endif
 }
